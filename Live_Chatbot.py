@@ -8,7 +8,7 @@ import requests
 import json
 import os
 os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
-auth_token = os.environ["auth_token"]
+auth_token = os.environ["AUTH_TOKEN"]
 headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {auth_token}'
