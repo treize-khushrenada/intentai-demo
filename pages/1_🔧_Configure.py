@@ -18,10 +18,13 @@ pre_msg_number = 0
 
 # initialize the session states on different tabs
 # cross tabs
+if 'bot_id' not in st.session_state:
+    st.session_state['bot_id'] = 1127
+
 if 'bot_info' not in st.session_state:
     st.session_state['bot_info'] = {
                                     "user_id" : 1, 
-                                    "bot_id" : 1127, 
+                                    "bot_id" : st.session_state['bot_id'], 
                                     "custom_knowledge" : None,
                                     "custom_persona" : None,
                                     "llm_name" : None,
@@ -125,8 +128,8 @@ with tab_knowledge:
         
         st.session_state['bot_info']['custom_knowledge'] = True
         
-        botinfo_response = requests.post('https://9405-223-19-159-62.ngrok.app/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
-                        
+        botinfo_response = requests.post('https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
+        print(botinfo_response)         
         if botinfo_response.json()['status'] == 'success':
 
             st.success('Custom Knowledge Base: On')
@@ -139,10 +142,9 @@ with tab_knowledge:
             
             st.write("**1. Define Cluster**")
 
-            st.session_state['cluster_desc'] = st.text_input('Cluster Name', placeholder = 'to help chatbot understand it better')
-            #(hide related tasks to avoid confusions)st.session_state['related_tasks'] = st.text_area('Related Tasks', value = st.session_state.get('related_tasks', ''), placeholder = 'to help chatbot understand it better (i.e. Useful for when...)')
-            st.session_state['related_tasks'] = ""
-            st.session_state['usage_instructions'] = st.text_area('Detailed Descriptions/Instructions', value = st.session_state.get('usage_instructions', ''), placeholder = 'to help chatbot understand it better (i.e. Tasked to...)')
+            st.session_state['cluster_desc'] = st.text_input('Describe the Cluster', placeholder = 'to help chatbot understand it better')
+            st.session_state['related_tasks'] = st.text_area('Related Tasks', value = st.session_state.get('related_tasks', ''), placeholder = 'to help chatbot understand it better (i.e. Useful for when...)')
+            st.session_state['usage_instructions'] = st.text_area('Usage Instructions', value = st.session_state.get('usage_instructions', ''), placeholder = 'to help chatbot understand it better (i.e. Tasked to...)')
 
             # knowledge_clusters_removed = st.button('Clear All Clusters', key="knowledge_clusters_removed", on_click=remove_knowledge_cluster)
 
@@ -156,7 +158,7 @@ with tab_knowledge:
         with st.container():
             #st.write("Choose")
             for i, uploaded_file in enumerate(st.session_state['list_documents']):
-                document_selected = st.checkbox(uploaded_file.name)
+                document_selected = st.checkbox(uploaded_file.name, value=True)
                 
                 if document_selected:
                     document_desc = st.text_input('Describe the document', placeholder = 'to help chatbot understand it better', key=uploaded_file.name+'input')
@@ -177,7 +179,7 @@ with tab_knowledge:
 
                 memory_config = {
                                 'user_id' : 1,
-                                'bot_id' : 1127,
+                                'bot_id' : st.session_state['bot_id'],
                                 'cluster_desc' : st.session_state['cluster_desc'],
                                 'related_tasks' : st.session_state['related_tasks'],
                                 'usage_instructions': st.session_state['usage_instructions'],
@@ -193,7 +195,7 @@ with tab_knowledge:
                 with st.spinner('updating vector store...'):
                     try:
                         
-                        kb_update_response = requests.post('https://9405-223-19-159-62.ngrok.app/memory/update', headers={"Content-Type": "application/json"}, json = memory_config)
+                        kb_update_response = requests.post('https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/memory/update', headers={"Content-Type": "application/json"}, json = memory_config)
                         
                         if kb_update_response.json()['status'] == 'success':
 
@@ -255,7 +257,7 @@ with tab_knowledge:
         
         st.session_state['bot_info']['custom_knowledge'] = False
         
-        botinfo_response = requests.post('https://9405-223-19-159-62.ngrok.app/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
+        botinfo_response = requests.post('https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
                         
         if botinfo_response.json()['status'] == 'success':
 
@@ -269,13 +271,13 @@ with tab_knowledge:
 
 with tab_persona_behavior:
     
-    thought_process = st.toggle('Customized Persona & Skills', key='agent_hierarchy')
+    thought_process = st.toggle('Customized Persona & Skills', key='agent_hierarchy', value=True)
     
     if thought_process:
         
         st.session_state['bot_info']['custom_persona'] = True
         
-        botinfo_response = requests.post('https://9405-223-19-159-62.ngrok.app/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
+        botinfo_response = requests.post('https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
                         
         if botinfo_response.json()['status'] == 'success':
 
@@ -340,13 +342,13 @@ with tab_persona_behavior:
                     try:
                             perona_skills_config = {
                                                 "user_id" : 1,
-                                                "bot_id" : 1127,
+                                                "bot_id" : st.session_state['bot_id'],
                                                 "role_prompt": st.session_state['role'], 
                                                 "personality_prompt": st.session_state['personality'], 
                                                 "tasks_prompt" : st.session_state['tasks']
                                                 }
 
-                            persona_skills_update_response = requests.post('https://9405-223-19-159-62.ngrok.app/persona-skills/update', headers={"Content-Type": "application/json"}, json = perona_skills_config)
+                            persona_skills_update_response = requests.post('https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/persona-skills/update', headers={"Content-Type": "application/json"}, json = perona_skills_config)
                             
 
                             if persona_skills_update_response.json()['status'] == 'success':
@@ -368,11 +370,11 @@ with tab_persona_behavior:
 
         st.session_state['bot_info']['custom_persona'] = False
             
-        botinfo_response = requests.post('https://9405-223-19-159-62.ngrok.app/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
+        botinfo_response = requests.post('https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
                             
         if botinfo_response.json()['status'] == 'success':
 
-            st.success('Custom Persona & Skills: Off')
+            st.success('Custom Persona & Skills: On')
 
         else:
                 
@@ -404,7 +406,7 @@ with tab_advanced:
                         st.session_state['bot_info']['llm_name'] = st.session_state['chosen_llm']
                         st.session_state['bot_info']['embedding_name'] = st.session_state['chosen_embedding']
                         
-                        botinfo_update_response = requests.post('https://9405-223-19-159-62.ngrok.app/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
+                        botinfo_update_response = requests.post('https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/bot-info/update', headers={"Content-Type": "application/json"}, json = st.session_state['bot_info'])
                             
                         if botinfo_update_response.json()['status'] == 'success':
 
@@ -420,4 +422,5 @@ with tab_advanced:
 with tab_channels:    
     st.write("**Instant Messenger (WhatsApp/ Telegram/ WeChat/ Facebook Messenger/ Line)**")
     st.write("Paste this link to your BSP account:")
-    txt = st.code("https://9405-223-19-159-62.ngrok.app/converse/text/botid=1127", language="markdown")
+    bot_id_str = str(st.session_state['bot_id'])
+    txt = st.code(f"https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/converse/text/botid={bot_id_str}", language="markdown")

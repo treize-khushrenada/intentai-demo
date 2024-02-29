@@ -13,7 +13,14 @@ def load_sidebar_layout():
 
 def sidebar_components():
 
-    return st.sidebar.write("""Gen AI Bot Builder"""), st.link_button("Refine Bot", "https://ematest.streamlit.app/"),st.sidebar.write("""Copyright © 2023 Intent AI All rights reserved.""")
+    components =(
 
+    st.selectbox(label="bot dropdown", label_visibility="hidden", options=(30, 2023120501, 2023120502, 2023120503, 2023120504, 2023120505, 2023120506, 2023120507, 1127), index=None, placeholder="Select chatbot id", key='bot_id'),
+    st.text_input('Authentication Key', placeholder = 'eyJhbGci...', key="auth_token"),
+    st.sidebar.write("""Gen AI Bot Builder"""), 
+    st.link_button("Refine Bot", "https://intentai.org/"),
+    st.sidebar.write("""Copyright © 2024 Intent AI All rights reserved.""")
 
-    
+    )
+
+    return components
