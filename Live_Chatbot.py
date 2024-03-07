@@ -9,9 +9,12 @@ import json
 import os
 os.environ["AWS_DEFAULT_REGION"] = "us-east-1"
 auth_token = st.secrets["AUTH_TOKEN"]
+# headers = {
+#            'Content-Type': 'application/json',
+#            'Authorization': f'Bearer {auth_token}'
+#             }
 headers = {
-            'Content-Type': 'application/json',
-            'Authorization': f'Bearer {auth_token}'
+            'Content-Type': 'application/json'
             }
 
 from langchain.schema import ChatMessage
@@ -71,10 +74,10 @@ if __name__ == '__main__':
             # response = get_response(prompt, st_callback)
             with st.spinner("Thinking..."):
                 bot_id_str = str(st.session_state['bot_id'])
-                converse_url = f"https://ema-intnt-app340275ed.whitehill-762226dd.centralindia.azurecontainerapps.io/converse/text/botid={bot_id_str}"
-                
-                
-                covnerse_response = requests.post(converse_url, json={"user_id": 1, "bot_id": st.session_state['bot_id'], "user_utterance": prompt}, headers=headers).json()
+                converse_url = f"https://platypus-calm-vaguely.ngrok-free.app/bot_builder/converse/"
+
+                # covnerse_response = requests.post(converse_url, json={"user_id": 1, "bot_id": st.session_state['bot_id'], "user_utterance": prompt}, headers=headers).json()
+                covnerse_response = requests.post(converse_url, json={"user_utterance": prompt}, headers=headers).json()
             
             st.session_state.messages.append(ChatMessage(role="assistant", content=covnerse_response['bot_message']))
             
