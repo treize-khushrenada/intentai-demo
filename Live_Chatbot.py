@@ -74,7 +74,7 @@ if __name__ == '__main__':
             # response = get_response(prompt, st_callback)
             with st.spinner("Thinking..."):
                 bot_id_str = str(st.session_state['bot_id'])
-                converse_url = f"https://platypus-calm-vaguely.ngrok-free.app/bot_builder/converse/"
+                converse_url = f"https://api-dev.int3nt.com/bot_builder/converse/text/botid/10"
 
                 # covnerse_response = requests.post(converse_url, json={"user_id": 1, "bot_id": st.session_state['bot_id'], "user_utterance": prompt}, headers=headers).json()
                 covnerse_response = requests.post(converse_url, json={"user_utterance": prompt}, headers=headers).json()
